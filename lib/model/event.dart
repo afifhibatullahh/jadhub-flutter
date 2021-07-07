@@ -4,9 +4,12 @@ class EventModel extends DatabaseItem {
   final String id;
   final String title;
   final String description;
+  final String bidang;
+  final String present;
+  final String absent;
   final DateTime eventDate;
 
-  EventModel({this.id, this.title, this.description, this.eventDate})
+  EventModel({this.id, this.title, this.description, this.eventDate,this.bidang,this.absent,this.present})
       : super(id);
 
   factory EventModel.fromMap(Map data) {
@@ -14,6 +17,9 @@ class EventModel extends DatabaseItem {
       title: data['title'],
       description: data['description'],
       eventDate: data['eventDate'],
+      bidang: data['bidang'],
+      present: data['present'],
+      absent: data['absent'],
     );
   }
 
@@ -22,6 +28,9 @@ class EventModel extends DatabaseItem {
       id: id,
       title: data['title'],
       description: data['description'],
+      bidang: data['bidang'],
+      present: data['present'],
+      absent: data['absent'],
       eventDate: data['event_date'].toDate(),
     );
   }
@@ -30,6 +39,9 @@ class EventModel extends DatabaseItem {
     return {
       "title": title,
       "description": description,
+      "bidang": bidang,
+      "present": present,
+      "absent": absent,
       "event_date": eventDate,
       "id": id,
     };

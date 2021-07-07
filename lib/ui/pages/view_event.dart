@@ -10,7 +10,7 @@ class EventDetailsPage extends StatelessWidget {
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
-        title: Text('Note details'),
+        title: Text('Detail Agenda'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -19,7 +19,10 @@ class EventDetailsPage extends StatelessWidget {
           children: <Widget>[
             Text(event.title, style: Theme.of(context).textTheme.display1,),
             SizedBox(height: 20.0),
-            Text(event.description)
+            Text(event.description),
+            Text(event.absent),
+            Text(event.present),
+            Text(event.bidang),
           ],
         ),
       ),
