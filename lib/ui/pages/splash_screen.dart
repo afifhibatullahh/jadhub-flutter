@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:jadhub_flutter/utils/color.dart';
 import 'package:jadhub_flutter/ui/pages/login_screen.dart';
 
-
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -31,8 +30,20 @@ class _SplashScreenState extends State<SplashScreen> {
               begin: Alignment.topCenter),
         ),
         child: Center(
-          // child: Image.asset("assets/logo.png"),
-          child: Text('Splash Screen'),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                children: [
+                  Image.asset("assets/logo.png"),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: Text('Dinas Perhubungan Provinsi Lampung', textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w500),),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

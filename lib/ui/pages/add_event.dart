@@ -47,7 +47,7 @@ class _AddEventPageState extends State<AddEventPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.note != null ? "Edit Note" : "Add note"),
+        title: Text(widget.note != null ? "Edit Note" : "Tambah Agenda"),
       ),
       key: _key,
       body: Form(
@@ -74,7 +74,7 @@ class _AddEventPageState extends State<AddEventPage> {
               ),
               const SizedBox(height: 10.0),
               ListTile(
-                title: Text("Dari"),
+                title: Text("Pilih Tanggal dan Waktu"),
                 subtitle: Text(
                     "${_eventDate.year} - ${_eventDate.month} - ${_eventDate.day}"),
                 onTap: () async {
@@ -90,21 +90,7 @@ class _AddEventPageState extends State<AddEventPage> {
                   }
                 },
               ),
-              ListTile(
-                title: Text("Dari"),
-                subtitle: Text(
-                    "${_eventDate.year} - ${_eventDate.month} - ${_eventDate.day}"),
-                onTap: () async {
-                  TimeOfDay picked = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.now());
-                  if (picked != null) {
-                    setState(() {
-                      _eventTime = picked;
-                    });
-                  }
-                },
-              ),
+             
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jadhub_flutter/ui/pages/home_page.dart';
 import 'package:jadhub_flutter/utils/color.dart';
 import 'package:jadhub_flutter/widget/button_widget.dart';
-
+import 'package:intl/intl.dart';
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -31,11 +31,25 @@ class _LoginScreenState extends State<LoginScreen> {
                     bottom: 20,
                     right: 20,
                     child: Text(
-                      'Login',
-                      style: TextStyle(color: Colors.white, fontSize: 20),
+                      'Login ke JadHub',
+                      style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: 'Poppins'),
                     )),
-                Center(
-                  // child: Image.asset('logo.png'),
+                Container(
+                  margin: EdgeInsets.only(top:50),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset('assets/logo.png'),
+                          SizedBox(width: 10),
+                          Image.asset('assets/lampung.png'),
+                        ],
+                      ),
+                      SizedBox(height: 10,),
+                      Text('Selamat Datang', style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),)
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -56,7 +70,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => HomePage()));
+                                    builder: (context) => HomePage(
+                                       DateTime.now()
+                                    ),
+                                  ),
+                            );
                           },
                           btnText: "LOGIN",
                         ),
