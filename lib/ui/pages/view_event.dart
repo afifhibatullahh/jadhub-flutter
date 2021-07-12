@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jadhub_flutter/model/event.dart';
+import 'package:jadhub_flutter/res/event_firestore_service.dart';
+import 'package:jadhub_flutter/ui/pages/home_page.dart';
+
+import 'add_event.dart';
 
 class EventDetailsPage extends StatelessWidget {
   final EventModel event;
@@ -18,29 +22,42 @@ class EventDetailsPage extends StatelessWidget {
               Icons.delete,
               color: Colors.white,
             ),
-            onPressed: () => showDialog<String>(
-              context: context,
-              builder: (BuildContext context) => AlertDialog(
-                title: const Text('Yakin?'),
-                content: const Text('Yakin ingin menghapus agenda ini?'),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, 'Batal'),
-                    child: const Text('Batal'),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, 'OK'),
-                    child: const Text('OK'),
-                  ),
-                ],
-              ),
-            ),
+            onPressed: () async {
+              final confirm = await showDialog<String>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text('Peringatan!', style: TextStyle(color: Colors.red),),
+                      content: Text('Yakin ingin menghapus agenda ini?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: Text('Hapus', style: TextStyle(color: Colors.red)),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: Text('Batal'),
+                        ),
+                      ],
+                    ),
+                  ) ??
+                  false;
+              if (confirm) {
+                await eventDBS.removeItem(event.id);
+                Navigator.pop(context);
+              }
+            },
           ),
           IconButton(
             icon: Icon(
               Icons.edit_sharp,
               color: Colors.white,
             ),
+            onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AddEventPage(
+                          note: event,
+                        ))),
           ),
         ],
       ),

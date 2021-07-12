@@ -227,11 +227,13 @@ class _HomePageState extends State<HomePage> {
                               trailing: Icon(Icons.edit_sharp),
                               onTap: () {
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (_) => EventDetailsPage(
-                                              event: event,
-                                            )));
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EventDetailsPage(
+                                      event: event,
+                                    ),
+                                  ),
+                                );
                               },
                             ),
                           ),

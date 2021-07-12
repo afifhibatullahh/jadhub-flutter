@@ -47,7 +47,7 @@ class _AddEventPageState extends State<AddEventPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.note != null ? "Edit Note" : "Tambah Agenda"),
+        title: Text(widget.note != null ? "Sunting Agenda" : "Tambah Agenda"),
       ),
       key: _key,
       body: Form(
@@ -168,7 +168,11 @@ class _AddEventPageState extends State<AddEventPage> {
                                 await eventDBS.updateData(widget.note.id, {
                                   "title": _title.text,
                                   "description": _description.text,
-                                  "event_date": widget.note.eventDate
+                                  "event_date": _eventDate,
+                                  "bidang": _bidang.text,
+                                  "present": _present.text,
+                                  "absent": _absent.text,
+                                  
                                 });
                               } else {
                                 await eventDBS.createItem(EventModel(
@@ -186,7 +190,7 @@ class _AddEventPageState extends State<AddEventPage> {
                             }
                           },
                           child: Text(
-                            "Save",
+                            "Simpan",
                             style: style.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
