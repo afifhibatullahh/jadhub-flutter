@@ -18,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   CalendarController _controller;
   Map<DateTime, List<dynamic>> _events;
   List<dynamic> _selectedEvents;
+  DateTime tgl;
 
   @override
   void initState() {
@@ -201,7 +202,7 @@ class _HomePageState extends State<HomePage> {
                         ListTile(
                           title: Text(
                             'Agenda',
-                            // DateFormat('EEE, MMM d, ''yy' ).format(widget._selectedDate),
+                            // DateFormat('EEE, MMM d, ''yy' ).format(tgl),
                             // checkDate(DateTime.now()),
                             // DateFormat. ,
                             // widget._selectedDate.toString(),

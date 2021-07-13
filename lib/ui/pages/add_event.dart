@@ -1,6 +1,9 @@
 import 'package:jadhub_flutter/model/event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:jadhub_flutter/res/event_firestore_service.dart';
+import 'package:intl/intl.dart';
+import 'package:jadhub_flutter/utils/color.dart';
 
 class AddEventPage extends StatefulWidget {
   final EventModel note;
@@ -39,7 +42,6 @@ class _AddEventPageState extends State<AddEventPage> {
     _absent = TextEditingController(
         text: widget.note != null ? widget.note.absent : "");
     _eventDate = DateTime.now();
-    _eventTime = TimeOfDay.now();
     processing = false;
   }
 
@@ -47,7 +49,17 @@ class _AddEventPageState extends State<AddEventPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.note != null ? "Sunting Agenda" : "Tambah Agenda"),
+        title: Text(widget.note != null ? "Sunting Agenda" : "Tambah Agenda", style: TextStyle(color: Colors.black),),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              // gradient: LinearGradient(
+              //   colors: [orangeColors, orangeLightColors],
+              //   // begin
+              // ),
+              color: Colors.white),
+        ),iconTheme: IconThemeData(
+    color: Colors.black, //change your color here
+  ),
       ),
       key: _key,
       body: Form(
@@ -56,48 +68,101 @@ class _AddEventPageState extends State<AddEventPage> {
           alignment: Alignment.center,
           child: ListView(
             children: <Widget>[
+              SizedBox(height: 10),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: TextFormField(
                   controller: _title,
                   validator: (value) =>
-                      (value.isEmpty) ? "Please Enter title" : null,
+                      (value.isEmpty) ? "Masukan Nama Acara" : null,
                   style: style,
                   decoration: InputDecoration(
-                      labelText: "Nama Acara",
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10))),
+                    labelText: "Nama Acara",
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 10.0),
-              ListTile(
-                title: Text("Pilih Tanggal dan Waktu"),
-                subtitle: Text(
-                    "${_eventDate.year} - ${_eventDate.month} - ${_eventDate.day}"),
-                onTap: () async {
-                  DateTime picked = await showDatePicker(
-                      context: context,
-                      initialDate: _eventDate,
-                      firstDate: DateTime(_eventDate.year - 5),
-                      lastDate: DateTime(_eventDate.year + 5));
-                  if (picked != null) {
-                    setState(() {
-                      _eventDate = picked;
-                    });
-                  }
-                },
+              // Padding(
+              //   padding:
+              //       const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              //   child: Container(
+              //     decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(10),
+              //       border: Border.all(width: 1, color: Colors.black.withOpacity(0.7)),
+
+              //     ),
+              //     child: ListTile(
+              //       title: Text("Pilih Tanggal"),
+              //       subtitle: Text(
+              //           "${_eventDate.year} - ${_eventDate.month} - ${_eventDate.day}"),
+              //       onTap: () async {
+              //         DateTime picked = await showDatePicker(
+              //             context: context,
+              //             initialDate: _eventDate,
+              //             firstDate: DateTime(_eventDate.year - 5),
+              //             lastDate: DateTime(_eventDate.year + 5));
+              //         if (picked != null) {
+              //           setState(() {
+              //             _eventDate = picked;
+              //           });
+              //         }
+              //       },
+              //     ),
+              //   ),
+              // ),
+
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(width: 1, color: Colors.black.withOpacity(0.7)),
+
+                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Pilih Tanggal dan Waktu', style: TextStyle(fontWeight: FontWeight.w600),),
+                      TextButton(
+                        onPressed: () {
+                          DatePicker.showDateTimePicker(
+                              context,
+                              showTitleActions: true,
+                              minTime: DateTime(_eventDate.year - 5),
+                              maxTime: DateTime(_eventDate.year + 5),
+                              currentTime: _eventDate, locale: LocaleType.id,
+                              onConfirm: (date) {
+                                setState(() {
+                                  _eventDate = date;
+                                });
+                              },
+                              );
+                        },
+                        child: Text(
+                          // '${_eventDate.year} - ${_eventDate.month} - ${_eventDate.day} - ${_eventDate.hour}:${_eventDate.minute}',
+                    DateFormat('EEE, MMM d, h:mm a').format(_eventDate),
+                          style: TextStyle(color: Colors.black.withOpacity(0.4)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-             
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: TextFormField(
                   controller: _bidang,
                   validator: (value) =>
-                      (value.isEmpty) ? "Please Enter bidang" : null,
+                      (value.isEmpty) ? "Masukan Nama bidang" : null,
                   style: style,
                   decoration: InputDecoration(
                       labelText: "Bidang",
@@ -113,7 +178,7 @@ class _AddEventPageState extends State<AddEventPage> {
                   minLines: 3,
                   maxLines: 5,
                   validator: (value) =>
-                      (value.isEmpty) ? "Please Enter description" : null,
+                      (value.isEmpty) ? "Tolong Masukan Kesimpulan" : null,
                   style: style,
                   decoration: InputDecoration(
                       labelText: "Kesimpulan",
@@ -127,8 +192,9 @@ class _AddEventPageState extends State<AddEventPage> {
                 child: TextFormField(
                   controller: _present,
                   validator: (value) =>
-                      (value.isEmpty) ? "Please Enter bidang" : null,
+                      (value.isEmpty) ? "Masukan Jumlah Kehadiran" : null,
                   style: style,
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       labelText: "Jumlah Hadir",
                       border: OutlineInputBorder(
@@ -141,8 +207,9 @@ class _AddEventPageState extends State<AddEventPage> {
                 child: TextFormField(
                   controller: _absent,
                   validator: (value) =>
-                      (value.isEmpty) ? "Please Enter bidang" : null,
+                      (value.isEmpty) ? "Masukan Jumlah Kehadiran" : null,
                   style: style,
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       labelText: "Jumlah Tidak Hadir",
                       border: OutlineInputBorder(
@@ -155,9 +222,10 @@ class _AddEventPageState extends State<AddEventPage> {
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: Material(
+                        color: orangeColors,
+                        shadowColor: orangeColors,
                         elevation: 5.0,
                         borderRadius: BorderRadius.circular(30.0),
-                        color: Theme.of(context).primaryColor,
                         child: MaterialButton(
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {
@@ -172,7 +240,6 @@ class _AddEventPageState extends State<AddEventPage> {
                                   "bidang": _bidang.text,
                                   "present": _present.text,
                                   "absent": _absent.text,
-                                  
                                 });
                               } else {
                                 await eventDBS.createItem(EventModel(

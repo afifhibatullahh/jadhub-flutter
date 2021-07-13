@@ -89,6 +89,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
    Widget _textInput({controller, hint, icon}) {
+     bool ya = false;
+     if (hint == 'Password') {
+       ya = true;
+     }
     return Container(
       margin: EdgeInsets.only(top: 10),
       decoration: BoxDecoration(
@@ -97,11 +101,13 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       padding: EdgeInsets.only(left: 10),
       child: TextFormField(
+        obscureText: ya,
         controller: controller,
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: hint,
           prefixIcon: Icon(icon),
+
         ),
       ),
     );
