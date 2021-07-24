@@ -123,11 +123,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: ButtonWidget(
                           onClick: () {
                             login();
-                            // Fluttertoast.showToast(
-                            //     msg: "This is Toast messaget",
-                            //     toastLength: Toast.LENGTH_SHORT,
-                            //     gravity: ToastGravity.CENTER,
-                            //     timeInSecForIosWeb: 1);
                           },
                           btnText: "LOGIN",
                         ),

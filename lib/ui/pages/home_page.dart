@@ -49,18 +49,12 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         title: Text('Jadwal DisHub',
             style: TextStyle(fontWeight: FontWeight.bold)),
-        // automaticallyImplyLeading: false,
         flexibleSpace: Container(
           decoration: BoxDecoration(
-              // gradient: LinearGradient(
-              //   colors: [orangeColors, orangeLightColors],
-              //   // begin
-              // ),
               color: orangeColors),
         ),
       ),
       drawer: MainDrawer(),
-      // backgroundColor: orangeColors,
       body: StreamBuilder<List<EventModel>>(
           stream: eventDBS.streamList(),
           builder: (context, snapshot) {
@@ -101,7 +95,6 @@ class _HomePageState extends State<HomePage> {
                           color: orangeColors,
                           fontWeight: FontWeight.bold,
                           fontSize: 20),
-                      // centerHeaderTitle: true,
                       formatButtonDecoration: BoxDecoration(
                         color: Colors.orange,
                         borderRadius: BorderRadius.circular(20.0),
@@ -115,7 +108,6 @@ class _HomePageState extends State<HomePage> {
                       rightChevronIcon: Icon(
                         Icons.chevron_right_rounded,
                         color: orangeColors,
-                        // size: 25,
                       ),
                     ),
                     startingDayOfWeek: StartingDayOfWeek.monday,
@@ -172,12 +164,6 @@ class _HomePageState extends State<HomePage> {
                         ListTile(
                           title: Text(
                             'Agenda',
-                            // DateFormat('EEE, MMM d, ''yy' ).format(),
-                            // checkDate(DateTime.now()),
-                            // DateFormat. ,
-                            // widget._selectedDate.toString(),
-                            // "${widget._selectedDate.year} - ${widget._selectedDate.month} - ${widget._selectedDate.day}",
-                            // style: Theme.of(context).textTheme.headline6
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 25,
@@ -192,7 +178,6 @@ class _HomePageState extends State<HomePage> {
                             child: ListTile(
                               title: Text(event.title),
                               subtitle: Text(
-                                // "${event.eventDate.year} - ${event.eventDate.month} - ${event.eventDate.day}"
                                 DateFormat.Hm().format(event.eventDate),
                               ),
                               onTap: () {

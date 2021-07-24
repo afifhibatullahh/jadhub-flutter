@@ -18,7 +18,7 @@ class ContributionPages extends StatelessWidget {
               color: Colors.white),
         ),
         iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
+          color: Colors.black, 
         ),
       ),
       body: Center(

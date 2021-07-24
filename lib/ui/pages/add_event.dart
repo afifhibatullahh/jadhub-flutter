@@ -2,7 +2,6 @@ import 'package:jadhub_flutter/model/event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:jadhub_flutter/model/message.dart';
-import 'package:jadhub_flutter/model/messaging.dart';
 import 'package:jadhub_flutter/res/event_firestore_service.dart';
 import 'package:intl/intl.dart';
 import 'package:jadhub_flutter/utils/color.dart';
@@ -17,7 +16,6 @@ class AddEventPage extends StatefulWidget {
 }
 
 class _AddEventPageState extends State<AddEventPage> {
-  // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   TextEditingController _title;
   TextEditingController _description;
   TextEditingController _bidang;
@@ -45,37 +43,6 @@ class _AddEventPageState extends State<AddEventPage> {
         text: widget.note != null ? widget.note.absent : "");
     _eventDate = DateTime.now();
     processing = false;
-    // _firebaseMessaging.onTokenRefresh.listen(sendTokenToServer);
-    // _firebaseMessaging.getToken();
-
-    // _firebaseMessaging.subscribeToTopic('all');
-
-    // _firebaseMessaging.configure(
-    //   onMessage: (Map<String, dynamic> message) async {
-    //     print("onMessage: $message");
-    //     final notification = message['notification'];
-    //     setState(() {
-    //       messages.add(Message(
-    //           title: notification['title'], body: notification['body']));
-    //     });
-    //   },
-    //   onLaunch: (Map<String, dynamic> message) async {
-    //     print("onLaunch: $message");
-
-    //     final notification = message['data'];
-    //     setState(() {
-    //       messages.add(Message(
-    //         title: '${notification['title']}',
-    //         body: '${notification['body']}',
-    //       ));
-    //     });
-    //   },
-    //   onResume: (Map<String, dynamic> message) async {
-    //     print("onResume: $message");
-    //   },
-    // );
-    // _firebaseMessaging.requestNotificationPermissions(
-    //     const IosNotificationSettings(sound: true, badge: true, alert: true));
   }
 
   @override
@@ -88,14 +55,10 @@ class _AddEventPageState extends State<AddEventPage> {
         ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
-              // gradient: LinearGradient(
-              //   colors: [orangeColors, orangeLightColors],
-              //   // begin
-              // ),
               color: Colors.white),
         ),
         iconTheme: IconThemeData(
-          color: Colors.black, //change your color here
+          color: Colors.black, 
         ),
       ),
       key: _key,
@@ -263,7 +226,6 @@ class _AddEventPageState extends State<AddEventPage> {
                                 processing = false;
                               });
                             }
-                            // sendNotification();
                           },
                           child: Text(
                             "SIMPAN",
@@ -279,20 +241,6 @@ class _AddEventPageState extends State<AddEventPage> {
     );
   }
 
-// Future sendNotification() async {
-//     final response = await Messaging.sendToAll(
-//       title: _title.text,
-//       body: _eventDate.toString(),
-//       // fcmToken: fcmToken,
-//     );
-
-//     if (response.statusCode != 200) {
-//       Scaffold.of(context).showSnackBar(SnackBar(
-//         content:
-//             Text('[${response.statusCode}] Error message: ${response.body}'),
-//       ));
-//     }
-//   }
 
   @override
   void dispose() {
@@ -301,9 +249,4 @@ class _AddEventPageState extends State<AddEventPage> {
     super.dispose();
   }
 
-  // void sendTokenToServer(String fcmToken) {
-  //   print('Token: $fcmToken');
-  //   // send key to your server to allow server to use
-  //   // this token to send push notifications
-  // }
 }

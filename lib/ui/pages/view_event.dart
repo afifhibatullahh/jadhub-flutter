@@ -95,60 +95,12 @@ class EventDetailsPage extends StatelessWidget {
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400)),
         flexibleSpace: Container(
           decoration: BoxDecoration(
-              // gradient: LinearGradient(
-              //   colors: [orangeColors, orangeLightColors],
-              //   // begin
-              // ),
               color: Colors.white),
         ),
         iconTheme: IconThemeData(
           color: Colors.black, //change your color here
         ),
         actions: [
-          // IconButton(
-          //   icon: Icon(
-          //     Icons.delete,
-          //     color: Colors.black,
-          //   ),
-          //   onPressed: () async {
-          //     final confirm = await showDialog(
-          //           context: context,
-          //           builder: (context) => AlertDialog(
-          //             title: Text(
-          //               'Peringatan!',
-          //               style: TextStyle(color: Colors.red),
-          //             ),
-          //             content: Text('Yakin ingin menghapus agenda ini?'),
-          //             actions: [
-          //               TextButton(
-          //                 onPressed: () => _accept(),
-          //                 child: Text('Hapus',
-          //                     style: TextStyle(color: Colors.red)),
-          //               ),
-          //               TextButton(
-          //                 onPressed: () => _notAccept(),
-          //                 child: Text('Batal'),
-          //               ),
-          //             ],
-          //           ),
-          //         ) ??
-          //         false;
-          //     if (confirm) {
-          //       await eventDBS.removeItem(event.id);
-          //       Navigator.pop(context);
-          //     }
-          //   },
-          // ),
-          // IconButton(
-          //   icon: Icon(
-          //     Icons.share,
-          //     color: Colors.black,
-          //   ),
-          //   onPressed: () {
-          //     Share.share('check out my website https://example.com');
-          //   }
-          // ),
-
           PopupMenuButton<MenuItem>(
               onSelected: (item) => onSelected(context, item),
               itemBuilder: (context) => [
