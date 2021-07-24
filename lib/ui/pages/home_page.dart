@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_session/flutter_session.dart';
 import 'package:jadhub_flutter/res/event_firestore_service.dart';
 import 'package:jadhub_flutter/ui/pages/add_event.dart';
+import 'package:jadhub_flutter/ui/pages/main_drawer.dart';
 import 'package:jadhub_flutter/ui/pages/view_event.dart';
 import 'package:jadhub_flutter/utils/color.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import '../../model/event.dart';
+import 'package:flutter_session/flutter_session.dart';
+// import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class HomePage extends StatefulWidget {
-  DateTime _selectedDate;
-  HomePage(this._selectedDate, {Key key}) : super(key: key);
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -39,48 +41,15 @@ class _HomePageState extends State<HomePage> {
     return data;
   }
 
-  DateTime _showDate(DateTime selectedDate) {
-    if (selectedDate.day == null ||
-        selectedDate.month == null ||
-        selectedDate.year == null) {
-      return selectedDate = DateTime.now();
-    }
-    return selectedDate;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.exit_to_app,
-              color: Colors.white,
-            ),
-            onPressed: () => showDialog<String>(
-              context: context,
-              builder: (BuildContext context) => AlertDialog(
-                title: const Text('Yakin?'),
-                content: const Text('Yakin ingin keluar dari aplikasi?'),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, 'Batal'),
-                    child: const Text('Batal'),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('OK'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
+        
         centerTitle: true,
         title: Text('Jadwal DisHub',
             style: TextStyle(fontWeight: FontWeight.bold)),
-        automaticallyImplyLeading: false,
+        // automaticallyImplyLeading: false,
         flexibleSpace: Container(
           decoration: BoxDecoration(
               // gradient: LinearGradient(
@@ -90,6 +59,7 @@ class _HomePageState extends State<HomePage> {
               color: orangeColors),
         ),
       ),
+      drawer: MainDrawer(),
       // backgroundColor: orangeColors,
       body: StreamBuilder<List<EventModel>>(
           stream: eventDBS.streamList(),
@@ -100,7 +70,6 @@ class _HomePageState extends State<HomePage> {
                 _events = _groupEvents(allEvents);
               }
             }
-            widget._selectedDate = _controller.selectedDay;
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,18 +125,19 @@ class _HomePageState extends State<HomePage> {
                       });
                     },
                     builders: CalendarBuilders(
-                      selectedDayBuilder: (context, date, events) => Container(
-                          margin: const EdgeInsets.all(4.0),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              color: orangeColors,
-                              borderRadius: BorderRadius.circular(15.0)),
-                          child: Text(
-                            date.day.toString(),
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          )),
+                      selectedDayBuilder: (context, date, events) =>
+                          Container(
+                              margin: const EdgeInsets.all(4.0),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                  color: orangeColors,
+                                  borderRadius: BorderRadius.circular(15.0)),
+                              child: Text(
+                                date.day.toString(),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              )),
                       todayDayBuilder: (context, date, events) => Container(
                         margin: const EdgeInsets.all(4.0),
                         alignment: Alignment.center,
@@ -202,7 +172,7 @@ class _HomePageState extends State<HomePage> {
                         ListTile(
                           title: Text(
                             'Agenda',
-                            // DateFormat('EEE, MMM d, ''yy' ).format(tgl),
+                            // DateFormat('EEE, MMM d, ''yy' ).format(),
                             // checkDate(DateTime.now()),
                             // DateFormat. ,
                             // widget._selectedDate.toString(),
@@ -223,19 +193,30 @@ class _HomePageState extends State<HomePage> {
                               title: Text(event.title),
                               subtitle: Text(
                                 // "${event.eventDate.year} - ${event.eventDate.month} - ${event.eventDate.day}"
-                                DateFormat('yMMMMd').format(event.eventDate),
+                                DateFormat.Hm().format(event.eventDate),
                               ),
-                              trailing: Icon(Icons.edit_sharp),
                               onTap: () {
-                                Navigator.push(
-                                  context,
+                                Navigator.of(context).push(
                                   MaterialPageRoute(
+                                    settings:
+                                        RouteSettings(name: "/homePage"),
                                     builder: (context) => EventDetailsPage(
                                       event: event,
                                     ),
                                   ),
                                 );
                               },
+                              trailing: IconButton(
+                                icon: Icon(Icons.edit_sharp),
+                                onPressed: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AddEventPage(
+                                      note: event,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ),

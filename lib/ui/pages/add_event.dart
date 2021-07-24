@@ -1,6 +1,8 @@
 import 'package:jadhub_flutter/model/event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:jadhub_flutter/model/message.dart';
+import 'package:jadhub_flutter/model/messaging.dart';
 import 'package:jadhub_flutter/res/event_firestore_service.dart';
 import 'package:intl/intl.dart';
 import 'package:jadhub_flutter/utils/color.dart';
@@ -15,15 +17,15 @@ class AddEventPage extends StatefulWidget {
 }
 
 class _AddEventPageState extends State<AddEventPage> {
-  TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
+  // final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   TextEditingController _title;
   TextEditingController _description;
   TextEditingController _bidang;
   TextEditingController _present;
   TextEditingController _absent;
-
+  final List<Message> messages = [];
+  
   DateTime _eventDate;
-  TimeOfDay _eventTime;
   final _formKey = GlobalKey<FormState>();
   final _key = GlobalKey<ScaffoldState>();
   bool processing;
@@ -43,13 +45,47 @@ class _AddEventPageState extends State<AddEventPage> {
         text: widget.note != null ? widget.note.absent : "");
     _eventDate = DateTime.now();
     processing = false;
+    // _firebaseMessaging.onTokenRefresh.listen(sendTokenToServer);
+    // _firebaseMessaging.getToken();
+
+    // _firebaseMessaging.subscribeToTopic('all');
+
+    // _firebaseMessaging.configure(
+    //   onMessage: (Map<String, dynamic> message) async {
+    //     print("onMessage: $message");
+    //     final notification = message['notification'];
+    //     setState(() {
+    //       messages.add(Message(
+    //           title: notification['title'], body: notification['body']));
+    //     });
+    //   },
+    //   onLaunch: (Map<String, dynamic> message) async {
+    //     print("onLaunch: $message");
+
+    //     final notification = message['data'];
+    //     setState(() {
+    //       messages.add(Message(
+    //         title: '${notification['title']}',
+    //         body: '${notification['body']}',
+    //       ));
+    //     });
+    //   },
+    //   onResume: (Map<String, dynamic> message) async {
+    //     print("onResume: $message");
+    //   },
+    // );
+    // _firebaseMessaging.requestNotificationPermissions(
+    //     const IosNotificationSettings(sound: true, badge: true, alert: true));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.note != null ? "Sunting Agenda" : "Tambah Agenda", style: TextStyle(color: Colors.black),),
+        title: Text(
+          widget.note != null ? "Sunting Agenda" : "Tambah Agenda",
+          style: TextStyle(color: Colors.black),
+        ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
               // gradient: LinearGradient(
@@ -57,9 +93,10 @@ class _AddEventPageState extends State<AddEventPage> {
               //   // begin
               // ),
               color: Colors.white),
-        ),iconTheme: IconThemeData(
-    color: Colors.black, //change your color here
-  ),
+        ),
+        iconTheme: IconThemeData(
+          color: Colors.black, //change your color here
+        ),
       ),
       key: _key,
       body: Form(
@@ -76,7 +113,6 @@ class _AddEventPageState extends State<AddEventPage> {
                   controller: _title,
                   validator: (value) =>
                       (value.isEmpty) ? "Masukan Nama Acara" : null,
-                  style: style,
                   decoration: InputDecoration(
                     labelText: "Nama Acara",
                     filled: true,
@@ -88,68 +124,44 @@ class _AddEventPageState extends State<AddEventPage> {
                 ),
               ),
               const SizedBox(height: 10.0),
-              // Padding(
-              //   padding:
-              //       const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              //   child: Container(
-              //     decoration: BoxDecoration(
-              //       borderRadius: BorderRadius.circular(10),
-              //       border: Border.all(width: 1, color: Colors.black.withOpacity(0.7)),
-
-              //     ),
-              //     child: ListTile(
-              //       title: Text("Pilih Tanggal"),
-              //       subtitle: Text(
-              //           "${_eventDate.year} - ${_eventDate.month} - ${_eventDate.day}"),
-              //       onTap: () async {
-              //         DateTime picked = await showDatePicker(
-              //             context: context,
-              //             initialDate: _eventDate,
-              //             firstDate: DateTime(_eventDate.year - 5),
-              //             lastDate: DateTime(_eventDate.year + 5));
-              //         if (picked != null) {
-              //           setState(() {
-              //             _eventDate = picked;
-              //           });
-              //         }
-              //       },
-              //     ),
-              //   ),
-              // ),
-
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(width: 1, color: Colors.black.withOpacity(0.7)),
-
-                    ),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                        width: 1, color: Colors.black.withOpacity(0.7)),
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Pilih Tanggal dan Waktu', style: TextStyle(fontWeight: FontWeight.w600),),
+                      Text(
+                        'Pilih Tanggal dan Waktu',
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
                       TextButton(
                         onPressed: () {
                           DatePicker.showDateTimePicker(
-                              context,
-                              showTitleActions: true,
-                              minTime: DateTime(_eventDate.year - 5),
-                              maxTime: DateTime(_eventDate.year + 5),
-                              currentTime: _eventDate, locale: LocaleType.id,
-                              onConfirm: (date) {
-                                setState(() {
-                                  _eventDate = date;
-                                });
-                              },
-                              );
+                            context,
+                            showTitleActions: true,
+                            minTime: DateTime(_eventDate.year - 5),
+                            maxTime: DateTime(_eventDate.year + 5),
+                            currentTime: _eventDate,
+                            locale: LocaleType.id,
+                            onConfirm: (date) {
+                              setState(() {
+                                _eventDate = date;
+                              });
+                            },
+                          );
                         },
                         child: Text(
                           // '${_eventDate.year} - ${_eventDate.month} - ${_eventDate.day} - ${_eventDate.hour}:${_eventDate.minute}',
-                    DateFormat('EEE, MMM d, h:mm a').format(_eventDate),
-                          style: TextStyle(color: Colors.black.withOpacity(0.4)),
+                          DateFormat('EEE, MMM d, h:mm a').format(_eventDate),
+                          style:
+                              TextStyle(color: Colors.black.withOpacity(0.4)),
                         ),
                       ),
                     ],
@@ -163,7 +175,6 @@ class _AddEventPageState extends State<AddEventPage> {
                   controller: _bidang,
                   validator: (value) =>
                       (value.isEmpty) ? "Masukan Nama bidang" : null,
-                  style: style,
                   decoration: InputDecoration(
                       labelText: "Bidang",
                       border: OutlineInputBorder(
@@ -179,7 +190,6 @@ class _AddEventPageState extends State<AddEventPage> {
                   maxLines: 5,
                   validator: (value) =>
                       (value.isEmpty) ? "Tolong Masukan Kesimpulan" : null,
-                  style: style,
                   decoration: InputDecoration(
                       labelText: "Kesimpulan",
                       border: OutlineInputBorder(
@@ -193,7 +203,6 @@ class _AddEventPageState extends State<AddEventPage> {
                   controller: _present,
                   validator: (value) =>
                       (value.isEmpty) ? "Masukan Jumlah Kehadiran" : null,
-                  style: style,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       labelText: "Jumlah Hadir",
@@ -208,7 +217,6 @@ class _AddEventPageState extends State<AddEventPage> {
                   controller: _absent,
                   validator: (value) =>
                       (value.isEmpty) ? "Masukan Jumlah Kehadiran" : null,
-                  style: style,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       labelText: "Jumlah Tidak Hadir",
@@ -255,12 +263,11 @@ class _AddEventPageState extends State<AddEventPage> {
                                 processing = false;
                               });
                             }
+                            // sendNotification();
                           },
                           child: Text(
-                            "Simpan",
-                            style: style.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
+                            "SIMPAN",
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 20),
                           ),
                         ),
                       ),
@@ -272,10 +279,31 @@ class _AddEventPageState extends State<AddEventPage> {
     );
   }
 
+// Future sendNotification() async {
+//     final response = await Messaging.sendToAll(
+//       title: _title.text,
+//       body: _eventDate.toString(),
+//       // fcmToken: fcmToken,
+//     );
+
+//     if (response.statusCode != 200) {
+//       Scaffold.of(context).showSnackBar(SnackBar(
+//         content:
+//             Text('[${response.statusCode}] Error message: ${response.body}'),
+//       ));
+//     }
+//   }
+
   @override
   void dispose() {
     _title.dispose();
     _description.dispose();
     super.dispose();
   }
+
+  // void sendTokenToServer(String fcmToken) {
+  //   print('Token: $fcmToken');
+  //   // send key to your server to allow server to use
+  //   // this token to send push notifications
+  // }
 }

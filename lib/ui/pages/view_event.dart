@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jadhub_flutter/model/event.dart';
+import 'package:jadhub_flutter/model/menu_item.dart';
 import 'package:jadhub_flutter/utils/color.dart';
 import 'package:intl/intl.dart';
+import 'package:jadhub_flutter/res/event_firestore_service.dart';
+import 'package:jadhub_flutter/utils/menu_items.dart';
+import 'package:share/share.dart';
 
 import 'add_event.dart';
 
@@ -13,9 +17,82 @@ class EventDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void _accept() {
+      Navigator.pop(context, true); // dialog returns true
+    }
+
+    void _notAccept() {
+      Navigator.pop(context, false); // dialog returns false
+    }
+
+    PopupMenuItem<MenuItem> buildItem(MenuItem item) => PopupMenuItem(
+          value: item,
+          child: Row(
+            children: [
+              Icon(
+                item.icon,
+                color: Colors.black,
+                size: 20,
+              ),
+              const SizedBox(width: 12),
+              Text(item.text),
+            ],
+          ),
+        );
+
+    void onSelected(BuildContext context, MenuItem item) async {
+      switch (item) {
+        case MenuItems.itemDelete:
+             {
+            final confirm = await showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text(
+                      'Peringatan!',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                    content: Text('Yakin ingin menghapus agenda ini?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => _accept(),
+                        child:
+                            Text('Hapus', style: TextStyle(color: Colors.red)),
+                      ),
+                      TextButton(
+                        onPressed: () => _notAccept(),
+                        child: Text('Batal'),
+                      ),
+                    ],
+                  ),
+                ) ??
+                false;
+            if (confirm) {
+              await eventDBS.removeItem(event.id);
+              Navigator.pop(context);
+            }
+          };
+          break;
+        case MenuItems.itemEdit:
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddEventPage(
+                note: event,
+              ),
+            ),
+          );
+          break;
+        case MenuItems.itemShare:
+        var eventdate =  DateFormat('EEEE, MMMM d, h:mm a').format(event.eventDate);
+          await Share.share('Agenda Pada ${eventdate}.\nmengenai ${event.title}  diharapkan peserta dapat menghadiri acara tersebut');
+          break;
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Detail Agenda', style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400)),
+        title: Text('Detail Agenda',
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400)),
         flexibleSpace: Container(
           decoration: BoxDecoration(
               // gradient: LinearGradient(
@@ -23,57 +100,60 @@ class EventDetailsPage extends StatelessWidget {
               //   // begin
               // ),
               color: Colors.white),
-        ),iconTheme: IconThemeData(
-    color: Colors.black, //change your color here
-  ),
+        ),
+        iconTheme: IconThemeData(
+          color: Colors.black, //change your color here
+        ),
         actions: [
-          IconButton(
-            icon: Icon(
-              Icons.delete,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              // final confirm = await
-              showDialog<String>(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text(
-                    'Peringatan!',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                  content: Text('Yakin ingin menghapus agenda ini?'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, "OK"),
-                      child: Text('Hapus', style: TextStyle(color: Colors.red)),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, "OK"),
-                      child: Text('Batal'),
-                    ),
-                  ],
-                ),
-              );
-              // ??
-              //     false;
-              // if (confirm) {
-              //   // await eventDBS.removeItem(event.id);
-              //   // Navigator.pop(context);
-              // }
-            },
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.edit_sharp,
-              color: Colors.black,
-            ),
-            onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AddEventPage(
-                          note: event,
-                        ))),
-          ),
+          // IconButton(
+          //   icon: Icon(
+          //     Icons.delete,
+          //     color: Colors.black,
+          //   ),
+          //   onPressed: () async {
+          //     final confirm = await showDialog(
+          //           context: context,
+          //           builder: (context) => AlertDialog(
+          //             title: Text(
+          //               'Peringatan!',
+          //               style: TextStyle(color: Colors.red),
+          //             ),
+          //             content: Text('Yakin ingin menghapus agenda ini?'),
+          //             actions: [
+          //               TextButton(
+          //                 onPressed: () => _accept(),
+          //                 child: Text('Hapus',
+          //                     style: TextStyle(color: Colors.red)),
+          //               ),
+          //               TextButton(
+          //                 onPressed: () => _notAccept(),
+          //                 child: Text('Batal'),
+          //               ),
+          //             ],
+          //           ),
+          //         ) ??
+          //         false;
+          //     if (confirm) {
+          //       await eventDBS.removeItem(event.id);
+          //       Navigator.pop(context);
+          //     }
+          //   },
+          // ),
+          // IconButton(
+          //   icon: Icon(
+          //     Icons.share,
+          //     color: Colors.black,
+          //   ),
+          //   onPressed: () {
+          //     Share.share('check out my website https://example.com');
+          //   }
+          // ),
+
+          PopupMenuButton<MenuItem>(
+              onSelected: (item) => onSelected(context, item),
+              itemBuilder: (context) => [
+                    ...MenuItems.itemsFirst.map(buildItem).toList(),
+                  ])
         ],
       ),
       body: SingleChildScrollView(
@@ -147,7 +227,10 @@ class EventDetailsPage extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Kehadiran :', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
+                Text(
+                  'Kehadiran :',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
                 Text("  " + event.present + " Hadir"),
                 Text("  " + event.absent + " Tidak Hadir"),
               ],
