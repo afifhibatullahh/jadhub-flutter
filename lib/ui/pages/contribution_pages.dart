@@ -48,7 +48,7 @@ class ContributionPages extends StatelessWidget {
             SizedBox(height: MediaQuery.of(context).size.height * 0.2),
             Text('Build With 💙'),
             SizedBox(height: 10),
-            Text('Thanks to\nAfif Hibatullah\nBagus Dwi Prasetyo',textAlign: TextAlign.center,),
+            Text('Thanks to\nAfif Hibatullah',textAlign: TextAlign.center,),
           ],
         ),
       ),
