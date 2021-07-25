@@ -2,7 +2,7 @@
     package="com.example.jadhub_flutter">
   <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="jadhub_flutter"
+        android:label="jadhub"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

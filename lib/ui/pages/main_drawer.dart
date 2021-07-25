@@ -78,12 +78,14 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.55,
-        ),
-        Text(
-          'Copyright @ 2021 Mahasiswa KP Insitut Teknologi Sumatera',
-          style: TextStyle(fontSize: 8, fontWeight: FontWeight.w600),
+        Expanded(
+          child: Container(
+            alignment: Alignment.bottomCenter,
+            child: Text(
+              'Copyright © 2021 Mahasiswa KP Insitut Teknologi Sumatera',
+              style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600, height: 13),
+            ),
+          ),
         ),
       ]),
     );

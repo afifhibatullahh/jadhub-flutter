@@ -20,6 +20,14 @@ class ContributionPages extends StatelessWidget {
         iconTheme: IconThemeData(
           color: Colors.black, 
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.groups),
+            onPressed: () {
+              return null;
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
@@ -37,7 +45,10 @@ class ContributionPages extends StatelessWidget {
               height: 5,
             ),
             Text('Jadhub v1.0'),
-            SizedBox(height: MediaQuery.of(context).size.height * 0.3),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+            Text('Build With 💙'),
+            SizedBox(height: 10),
+            Text('Thanks to\nAfif Hibatullah\nBagus Dwi Prasetyo',textAlign: TextAlign.center,),
           ],
         ),
       ),

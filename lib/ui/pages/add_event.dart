@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:jadhub_flutter/model/event.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -22,7 +23,7 @@ class _AddEventPageState extends State<AddEventPage> {
   TextEditingController _present;
   TextEditingController _absent;
   final List<Message> messages = [];
-  
+
   DateTime _eventDate;
   final _formKey = GlobalKey<FormState>();
   final _key = GlobalKey<ScaffoldState>();
@@ -54,11 +55,10 @@ class _AddEventPageState extends State<AddEventPage> {
           style: TextStyle(color: Colors.black),
         ),
         flexibleSpace: Container(
-          decoration: BoxDecoration(
-              color: Colors.white),
+          decoration: BoxDecoration(color: Colors.white),
         ),
         iconTheme: IconThemeData(
-          color: Colors.black, 
+          color: Colors.black,
         ),
       ),
       key: _key,
@@ -167,6 +167,9 @@ class _AddEventPageState extends State<AddEventPage> {
                   validator: (value) =>
                       (value.isEmpty) ? "Masukan Jumlah Kehadiran" : null,
                   keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
                   decoration: InputDecoration(
                       labelText: "Jumlah Hadir",
                       border: OutlineInputBorder(
@@ -181,6 +184,9 @@ class _AddEventPageState extends State<AddEventPage> {
                   validator: (value) =>
                       (value.isEmpty) ? "Masukan Jumlah Kehadiran" : null,
                   keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
                   decoration: InputDecoration(
                       labelText: "Jumlah Tidak Hadir",
                       border: OutlineInputBorder(
@@ -229,7 +235,10 @@ class _AddEventPageState extends State<AddEventPage> {
                           },
                           child: Text(
                             "SIMPAN",
-                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 20),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20),
                           ),
                         ),
                       ),
@@ -241,12 +250,10 @@ class _AddEventPageState extends State<AddEventPage> {
     );
   }
 
-
   @override
   void dispose() {
     _title.dispose();
     _description.dispose();
     super.dispose();
   }
-
 }
